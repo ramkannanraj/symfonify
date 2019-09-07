@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Welcome to Internat {% endblock %}
+
+{% block body %}
+{% for message in app.flashes('success') %}
+    <div class="alert alert-success">
+        {{ message }}
+    </div>
+{% endfor %}
+{% for message in app.flashes('failure') %}
+    <div class="alert alert-danger">
+        {{ message }}
+    </div>
+{% endfor %}
+
+<h2>Create Group</h2>
+	{{ form_start(form) }}
+ 	{{ form_widget(form) }}
+	<input type="submit" value="Create Group" class = "btn btn-primary mt-3"/>
+ 	{{ form_end(form) }}
+<h2>Group</h2>
+ {% if groups %}
+ 	<table class="table table-striped">
+ 		<thead>
+ 			<th>Group Name</th>
+ 			<th>Action</th>
+ 		</thead>
+ 		<tbody>
+ 			{% for group in groups %}
+ 				<tr>
+ 					<td>{{ group.name }}</td>
+ 					<td> <a href="groups/delete/{{ group.id }}" class="btn btn-danger">Delete</a></td>
+ 				</tr>
+ 			{% endfor %}
+ 		</tbody>
+ 	</table>
+ {% else %}
+ 	<p>No group found  </p>
+ {% endif %}
+{% endblock %}

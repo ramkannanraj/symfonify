@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Welcome to Internat {% endblock %}
+
+{% block body %}
+{% for message in app.flashes('success') %}
+    <div class="alert alert-success">
+        {{ message }}
+    </div>
+{% endfor %}
+{% for message in app.flashes('failure') %}
+    <div class="alert alert-danger">
+        {{ message }}
+    </div>
+{% endfor %}
+<h2>Create Users</h2>
+	{{ form_start(user_form) }}
+ 	{{ form_widget(user_form) }}
+	<input type="submit" value="Create User" class = "btn btn-primary mt-3"/>
+ 	{{ form_end(user_form) }}
+ 	<hr>
+<h2>Users</h2>
+ {% if users %}
+ 	<table class="table table-striped">
+ 		<thead>
+ 			<th>Users Name</th>
+ 			<th>Action</th>
+ 		</thead>
+ 		<tbody>
+ 			{% for user in users %}
+ 				<tr>
+ 					<td>{{ user.name }}</td>
+
+ 					<td>
+ 						{% for group in user.groups %}
+ 						<span class="badge badge-light">{{ group.name }} <a  href="" class="del" data-userId="{{user.id}}" data-groupId="{{group.id}}">X</a></span>
+ 						{% endfor %}
+ 					</td>
+ 					<td> <a href="user/delete/{{ user.id }}" class="btn btn-danger">Delete</a></td>
+ 				</tr>
+ 			{% endfor %}
+ 		</tbody>
+ 	</table>
+ {% else %}
+ 	<p>No users  </p>
+ {% endif %}
+
+{% endblock %}
+{% block javascripts %}
+	<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+<script>
+
+
+$('.del').click( function(e){
+	e.preventDefault();
+        var userId = $(this).attr('data-userId');
+        var groupId = $(this).attr('data-groupId');
+        $.ajax({
+            url: '/remove/user/' + userId + '/group/' + groupId,
+            type: 'DELETE',
+            data: {id:'userId', groupId:'groupId'},
+            success: function(data) {
+	         	location.reload();
+	      	}
+        });
+});
+
+</script>
+{% endblock %}
+
